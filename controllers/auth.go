@@ -10,8 +10,8 @@ import (
 type RegisterInput struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
-	Age      uint8  `json:"age" binding:"required,gte=0,lte=130"`
+	Password string `json:"password" binding:"required,min=6"`
+	Age      uint8  `json:"age" binding:"required,gt=8,lte=200"`
 }
 
 func Register(c *gin.Context) {
@@ -41,7 +41,7 @@ func Register(c *gin.Context) {
 
 type LoginInput struct {
 	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Password string `json:"password" binding:"required,min=6"`
 }
 
 func Login(c *gin.Context) {
