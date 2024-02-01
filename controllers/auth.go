@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/e-hastono/mygram/models"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type RegisterInput struct {
@@ -18,7 +20,12 @@ func Register(c *gin.Context) {
 	var input RegisterInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		var validationErrors []string
+		for _, err := range err.(validator.ValidationErrors) {
+			validationErrors = append(validationErrors, fmt.Sprintf("%s: %s", err.Field(), err.Error()))
+		}
+
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": validationErrors})
 		return
 	}
 
@@ -48,7 +55,12 @@ func Login(c *gin.Context) {
 	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		var validationErrors []string
+		for _, err := range err.(validator.ValidationErrors) {
+			validationErrors = append(validationErrors, fmt.Sprintf("%s: %s", err.Field(), err.Error()))
+		}
+
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": validationErrors})
 		return
 	}
 
