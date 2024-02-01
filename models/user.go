@@ -1,10 +1,10 @@
 package models
 
 import (
+	"errors"
 	"html"
 	"strings"
 
-	"github.com/e-hastono/mygram/utils/token"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -42,7 +42,7 @@ func VerifyPassword(password, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func LoginCheck(username string, password string) (string, error) {
+func LoginCheck(username string, password string) (uint, error) {
 	var err error
 
 	u := User{}
@@ -50,20 +50,30 @@ func LoginCheck(username string, password string) (string, error) {
 	err = DB.Model(User{}).Where("username = ?", username).Take(&u).Error
 
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	err = VerifyPassword(password, u.Password)
 
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		return "", err
+		return 0, err
 	}
 
-	token, err := token.GenerateToken(u.ID)
+	return u.ID, nil
+}
 
-	if err != nil {
-		return "", err
+func GetUserByID(uid uint) (User, error) {
+	var u User
+
+	if err := DB.First(&u, uid).Error; err != nil {
+		return u, errors.New("User not found")
 	}
 
-	return token, nil
+	u.PrepareGive()
+
+	return u, nil
+}
+
+func (u *User) PrepareGive() {
+	u.Password = ""
 }

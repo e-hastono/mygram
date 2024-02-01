@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/e-hastono/mygram/models"
+	"github.com/e-hastono/mygram/utils/token"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -39,7 +40,7 @@ func Register(c *gin.Context) {
 	_, err := u.SaveUser()
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -69,12 +70,35 @@ func Login(c *gin.Context) {
 	u.Username = input.Username
 	u.Password = input.Password
 
-	token, err := models.LoginCheck(u.Username, u.Password)
+	uid, err := models.LoginCheck(u.Username, u.Password)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Username or password is incorrect"})
+		return
+	}
+
+	token, err := token.GenerateToken(uid)
+
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func CurrentUser(c *gin.Context) {
+	user_id, err := token.ExtractTokenID(c)
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
+
+	u, err := models.GetUserByID(user_id)
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
 }
