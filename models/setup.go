@@ -35,5 +35,5 @@ func ConnectDatabase() {
 		fmt.Printf("[gorm database] Successfully connected to MySQL/MariaDB database %s on %s:%s\n\n", dbName, dbHost, dbPort)
 	}
 
-	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&User{}, &SocialMedia{}, &Photo{}, &Comment{})
 }
