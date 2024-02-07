@@ -17,9 +17,16 @@ func main() {
 		public.POST("/register", controllers.Register)
 		public.POST("/login", controllers.Login)
 
-		protected := public.Group("/admin")
+		protected := public.Group("/user")
 		protected.Use(middleware.JwtAuthMiddleware())
-		protected.GET("/user", controllers.CurrentUser)
+		protected.GET("/", controllers.CurrentUser)
+
+		// photos
+		photos := protected.Group("/photos")
+		{
+			photos.GET("/", controllers.GetAllPhotos)
+			photos.GET("/:photo_id", controllers.GetOnePhoto)
+		}
 	}
 
 	r.Run(":8080")
