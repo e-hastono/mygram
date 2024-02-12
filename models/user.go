@@ -5,21 +5,19 @@ import (
 	"html"
 	"strings"
 
+	"github.com/e-hastono/mygram/database"
+	"github.com/e-hastono/mygram/entities"
+
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-type User struct {
-	gorm.Model
-	Username string  `gorm:"size:255;not null;unique" json:"username"`
-	Email    string  `gorm:"size:255;not null;unique" json:"email"`
-	Password string  `gorm:"size:255;not null;" json:"password"`
-	Age      uint8   `gorm:"type:tinyint unsigned; not null" json:"age"`
-	Photos   []Photo `gorm:"foreignKey:UserID"`
-}
+type User entities.User
 
 func (u *User) SaveUser() (*User, error) {
-	err := DB.Create(&u).Error
+	db := database.GetDB()
+
+	err := db.Create(&u).Error
 	if err != nil {
 		return &User{}, err
 	}
@@ -48,7 +46,9 @@ func LoginCheck(username string, password string) (uint, error) {
 
 	u := User{}
 
-	err = DB.Model(User{}).Where("username = ?", username).Take(&u).Error
+	db := database.GetDB()
+
+	err = db.Model(User{}).Where("username = ?", username).Take(&u).Error
 
 	if err != nil {
 		return 0, err
@@ -66,7 +66,9 @@ func LoginCheck(username string, password string) (uint, error) {
 func GetUserByID(uid uint) (User, error) {
 	var u User
 
-	if err := DB.First(&u, uid).Error; err != nil {
+	db := database.GetDB()
+
+	if err := db.First(&u, uid).Error; err != nil {
 		return u, errors.New("User not found")
 	}
 
