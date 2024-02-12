@@ -1,5 +1,7 @@
 # MyGram - Emmanoel Pratama Putra Hastono
 
+BFLP Bootcamp IT - Final Project Golang
+
 1. User : - Register [POST] - Login [POST]
 2. Photo : - GetAll [GET] - GetOne [GET] - CreatePhoto [POST] - UpdatePhoto [PUT] - DeletePhoto [DELETE]
 3. Comment : - GetAll [GET] - GetOne [GET] - CreateComment [POST] - UpdateComment [PUT] - DeleteComment [DELETE]
