@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/e-hastono/mygram/controllers"
-	"github.com/e-hastono/mygram/middleware"
+	"github.com/e-hastono/mygram/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +15,7 @@ func StartServer() *gin.Engine {
 		public.POST("/login", controllers.Login)
 
 		protected := public.Group("/user")
-		protected.Use(middleware.JwtAuthMiddleware())
+		protected.Use(middlewares.JwtAuthMiddleware())
 		protected.GET("/", controllers.CurrentUser)
 
 		// photos

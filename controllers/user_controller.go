@@ -1,11 +1,10 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/e-hastono/mygram/helpers"
 	"github.com/e-hastono/mygram/models"
-	"github.com/e-hastono/mygram/utils/token"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -21,12 +20,12 @@ func Register(c *gin.Context) {
 	var input RegisterInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		var validationErrors []string
-		for _, err := range err.(validator.ValidationErrors) {
-			validationErrors = append(validationErrors, fmt.Sprintf("%s: %s", err.Field(), err.Error()))
-		}
+		validationErrors := helpers.ValidationErrorMessages(err.(validator.ValidationErrors))
 
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": validationErrors})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"status": "failure",
+			"error":  validationErrors,
+		})
 		return
 	}
 
@@ -40,11 +39,17 @@ func Register(c *gin.Context) {
 	_, err := u.SaveUser()
 
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"status": "failure",
+			"error":  err.Error(),
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "registration success"})
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "registration successful",
+	})
 }
 
 type LoginInput struct {
@@ -56,12 +61,12 @@ func Login(c *gin.Context) {
 	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		var validationErrors []string
-		for _, err := range err.(validator.ValidationErrors) {
-			validationErrors = append(validationErrors, fmt.Sprintf("%s: %s", err.Field(), err.Error()))
-		}
+		validationErrors := helpers.ValidationErrorMessages(err.(validator.ValidationErrors))
 
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": validationErrors})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"status": "failure",
+			"error":  validationErrors,
+		})
 		return
 	}
 
@@ -73,22 +78,31 @@ func Login(c *gin.Context) {
 	uid, err := models.LoginCheck(u.Username, u.Password)
 
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Username or password is incorrect"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"status": "failure",
+			"error":  "username or password is incorrect",
+		})
 		return
 	}
 
-	token, err := token.GenerateToken(uid)
+	token, err := helpers.GenerateToken(uid)
 
 	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"status": "failure",
+			"error":  err.Error(),
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"token":  token,
+	})
 }
 
 func CurrentUser(c *gin.Context) {
-	user_id, err := token.ExtractTokenID(c)
+	user_id, err := helpers.ExtractTokenID(c)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
