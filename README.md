@@ -46,7 +46,7 @@ MyGram adalah sebuah aplikasi untuk penyimpanan foto serta komentar foto orang l
 
 ### Instalasi
 
-Pastikan Anda memiliki [Go](https://go.dev/) dan PostgreSQL terpasang pada perangkat Anda.
+Pastikan Anda memiliki [Go](https://go.dev/) dan [PostgreSQL](https://www.postgresql.org/) terpasang pada perangkat Anda.
 
 1. Clone repository ini
 
