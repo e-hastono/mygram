@@ -16,7 +16,6 @@ func StartServer() *gin.Engine {
 
 		protected := public.Group("/user")
 		protected.Use(middlewares.JwtAuthentication())
-		protected.GET("/", controllers.CurrentUser)
 
 		// social media
 		socialmedias := protected.Group("/socialmedia")

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"errors"
 	"html"
 	"strings"
 
@@ -61,22 +60,4 @@ func LoginCheck(username string, password string) (uint, error) {
 	}
 
 	return u.ID, nil
-}
-
-func GetUserByID(uid uint) (User, error) {
-	var u User
-
-	db := database.GetDB()
-
-	if err := db.First(&u, uid).Error; err != nil {
-		return u, errors.New("User not found")
-	}
-
-	u.PrepareGive()
-
-	return u, nil
-}
-
-func (u *User) PrepareGive() {
-	u.Password = ""
 }

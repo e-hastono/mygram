@@ -100,19 +100,3 @@ func Login(c *gin.Context) {
 		"token":  token,
 	})
 }
-
-func CurrentUser(c *gin.Context) {
-	user_id, err := helpers.ExtractTokenID(c)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-		return
-	}
-
-	u, err := models.GetUserByID(user_id)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
-}
