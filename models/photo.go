@@ -21,7 +21,7 @@ func GetPhotosByUserID(uid uint) ([]Photo, error) {
 	return photos, nil
 }
 
-func GetPhotoByPhotoUserID(pid uint, uid uint) (Photo, error) {
+func GetPhotoByPhotoIDUserID(pid uint, uid uint) (Photo, error) {
 	var photo Photo
 
 	db := database.GetDB()

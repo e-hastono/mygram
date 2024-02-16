@@ -38,7 +38,7 @@ func GetOnePhoto(c *gin.Context) {
 		return
 	}
 
-	photo, err := models.GetPhotoByPhotoUserID(uint(photo_id), user_id)
+	photo, err := models.GetPhotoByPhotoIDUserID(uint(photo_id), user_id)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return

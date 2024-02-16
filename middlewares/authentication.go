@@ -7,12 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func JwtAuthMiddleware() gin.HandlerFunc {
+func JwtAuthentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := helpers.VerifyToken(c)
 		if err != nil {
-			c.String(http.StatusUnauthorized, "Unauthorized")
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error":   "Unauthenticated",
+				"message": err.Error(),
+			})
 			return
 		}
 		c.Next()

@@ -15,14 +15,25 @@ func StartServer() *gin.Engine {
 		public.POST("/login", controllers.Login)
 
 		protected := public.Group("/user")
-		protected.Use(middlewares.JwtAuthMiddleware())
+		protected.Use(middlewares.JwtAuthentication())
 		protected.GET("/", controllers.CurrentUser)
+
+		// social media
+		socialmedias := protected.Group("/socialmedia")
+		{
+			socialmedias.GET("/", controllers.GetAllSocialMedias)
+			socialmedias.GET("/:socialmediaId", controllers.GetOneSocialMedia)
+
+			socialmedias.POST("/", controllers.CreateSocialMedia)
+			socialmedias.PUT("/:socialmediaId", middlewares.SocialMediaAuthorization(), controllers.UpdateSocialMedia)
+			socialmedias.DELETE("/:socialmediaId", middlewares.SocialMediaAuthorization(), controllers.DeleteSocialMedia)
+		}
 
 		// photos
 		photos := protected.Group("/photos")
 		{
 			photos.GET("/", controllers.GetAllPhotos)
-			photos.GET("/:photo_id", controllers.GetOnePhoto)
+			photos.GET("/:photoId", controllers.GetOnePhoto)
 		}
 	}
 
