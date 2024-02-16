@@ -165,7 +165,7 @@ func GetAllSocialMedias(c *gin.Context) {
 }
 
 func GetOneSocialMedia(c *gin.Context) {
-	socialmedia_id, err := strconv.Atoi(c.Param("socialmedia_id"))
+	socialmedia_id, err := strconv.Atoi(c.Param("socialmediaId"))
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return

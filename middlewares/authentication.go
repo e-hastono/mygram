@@ -13,7 +13,7 @@ func JwtAuthentication() gin.HandlerFunc {
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":   "Unauthenticated",
-				"message": err.Error(),
+				"message": "please sign in to continue",
 			})
 			return
 		}
