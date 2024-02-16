@@ -13,8 +13,6 @@ import (
 type SocialMediaInput struct {
 	Name           string `json:"name" binding:"required"`
 	SocialMediaUrl string `json:"social_media_url" binding:"required"`
-	Title          string `json:"title"`
-	Caption        string `json:"caption"`
 }
 
 func CreateSocialMedia(c *gin.Context) {
@@ -42,8 +40,6 @@ func CreateSocialMedia(c *gin.Context) {
 	sm := models.SocialMedia{
 		Name:           input.Name,
 		SocialMediaUrl: input.SocialMediaUrl,
-		Title:          input.Title,
-		Caption:        input.Caption,
 		UserID:         user_id,
 	}
 
@@ -98,8 +94,6 @@ func UpdateSocialMedia(c *gin.Context) {
 		ID:             uint(socialmediaId),
 		Name:           input.Name,
 		SocialMediaUrl: input.SocialMediaUrl,
-		Title:          input.Title,
-		Caption:        input.Caption,
 		UserID:         user_id,
 	}
 

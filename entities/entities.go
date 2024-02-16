@@ -13,6 +13,16 @@ type User struct {
 	Photos    []Photo `gorm:"foreignKey:UserID"`
 }
 
+type SocialMedia struct {
+	ID             uint `gorm:"primarykey"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	Name           string `gorm:"size:255;not null" json:"name"`
+	SocialMediaUrl string `gorm:"type:text;not null" json:"social_media_url"`
+	User           User
+	UserID         uint `json:"user_id"`
+}
+
 type Photo struct {
 	ID        uint `gorm:"primarykey"`
 	CreatedAt time.Time
@@ -22,18 +32,6 @@ type Photo struct {
 	PhotoUrl  string `gorm:"type:text;not null" json:"photo_url"`
 	User      User
 	UserID    uint
-}
-
-type SocialMedia struct {
-	ID             uint `gorm:"primarykey"`
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-	Name           string `gorm:"size:255;not null" json:"name"`
-	SocialMediaUrl string `gorm:"type:text;not null" json:"social_media_url"`
-	Title          string `gorm:"size:255;not null" json:"title"`
-	Caption        string `gorm:"type:text;not null" json:"caption"`
-	User           User
-	UserID         uint `json:"user_id"`
 }
 
 type Comment struct {
