@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/e-hastono/mygram/database"
 	"github.com/e-hastono/mygram/routers"
 )
@@ -8,5 +11,16 @@ import (
 func main() {
 	database.StartDB()
 
-	routers.StartServer().Run(":8080")
+	routerPort := fmt.Sprintf(":%s", envPortOr("3000"))
+
+	routers.StartServer().Run(routerPort)
+}
+
+func envPortOr(port string) string {
+	// If `PORT` variable in environment exists, return it
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		return ":" + envPort
+	}
+	// Otherwise, return the value of `port` variable from function argument
+	return ":" + port
 }
