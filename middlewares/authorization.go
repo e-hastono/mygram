@@ -99,3 +99,48 @@ func PhotoAuthorization() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func CommentAuthorization() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		db := database.GetDB()
+		commentId, err := strconv.Atoi(c.Param("commentId"))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+				"status": "failure",
+				"error":  err.Error(),
+			})
+			return
+		}
+
+		userID, err := helpers.ExtractTokenID(c)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+				"status": "failure",
+				"error":  err.Error(),
+			})
+			return
+		}
+
+		Comment := models.Comment{}
+
+		err = db.Debug().Select("user_id").First(&Comment, uint(commentId)).Error
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"status": "failure",
+				"error":  err.Error(),
+			})
+			return
+		}
+
+		if Comment.UserID != userID {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"status": "failure",
+				"error":  "unauthorized to access this data",
+			})
+			return
+		}
+
+		c.Next()
+	}
+}

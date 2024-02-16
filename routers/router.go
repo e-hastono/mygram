@@ -38,6 +38,17 @@ func StartServer() *gin.Engine {
 			photos.PUT("/:photoId", middlewares.PhotoAuthorization(), controllers.UpdatePhoto)
 			photos.DELETE("/:photoId", middlewares.PhotoAuthorization(), controllers.DeletePhoto)
 		}
+
+		// comments
+		comments := protected.Group("/comments")
+		{
+			comments.GET("/", controllers.GetAllComments)
+			comments.GET("/:commentId", controllers.GetOneComment)
+
+			comments.POST("/", controllers.CreateComment)
+			comments.PUT("/:commentId", middlewares.CommentAuthorization(), controllers.UpdateComment)
+			comments.DELETE("/:commentId", middlewares.CommentAuthorization(), controllers.DeleteComment)
+		}
 	}
 
 	return r
