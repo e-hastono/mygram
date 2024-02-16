@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/e-hastono/mygram/database"
@@ -11,7 +10,7 @@ import (
 func main() {
 	database.StartDB()
 
-	routerPort := fmt.Sprintf(":%s", envPortOr("3000"))
+	routerPort := envPortOr("3000")
 
 	routers.StartServer().Run(routerPort)
 }
