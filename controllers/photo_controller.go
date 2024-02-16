@@ -39,6 +39,8 @@ func CreatePhoto(c *gin.Context) {
 	}
 
 	sm := models.Photo{
+		Title:    input.Title,
+		Caption:  input.Caption,
 		PhotoUrl: input.PhotoUrl,
 		UserID:   user_id,
 	}
@@ -92,6 +94,8 @@ func UpdatePhoto(c *gin.Context) {
 
 	sm := models.Photo{
 		ID:       uint(photoId),
+		Title:    input.Title,
+		Caption:  input.Caption,
 		PhotoUrl: input.PhotoUrl,
 		UserID:   user_id,
 	}
@@ -155,7 +159,7 @@ func GetAllPhotos(c *gin.Context) {
 }
 
 func GetOnePhoto(c *gin.Context) {
-	photo_id, err := strconv.Atoi(c.Param("photo_id"))
+	photo_id, err := strconv.Atoi(c.Param("photoId"))
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
