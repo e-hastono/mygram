@@ -9,6 +9,39 @@ import (
 
 type Photo entities.Photo
 
+func (p *Photo) SavePhoto() (*Photo, error) {
+	db := database.GetDB()
+
+	err := db.Debug().Create(&p).Error
+	if err != nil {
+		return &Photo{}, err
+	}
+
+	return p, nil
+}
+
+func (p *Photo) UpdatePhoto() (*Photo, error) {
+	db := database.GetDB()
+
+	err := db.Debug().Model(&p).Updates(p).Error
+	if err != nil {
+		return &Photo{}, err
+	}
+
+	return p, nil
+}
+
+func (p *Photo) DeletePhoto() error {
+	db := database.GetDB()
+
+	err := db.Debug().Delete(p).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetPhotosByUserID(uid uint) ([]Photo, error) {
 	db := database.GetDB()
 

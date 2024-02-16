@@ -33,6 +33,10 @@ func StartServer() *gin.Engine {
 		{
 			photos.GET("/", controllers.GetAllPhotos)
 			photos.GET("/:photoId", controllers.GetOnePhoto)
+
+			photos.POST("/", controllers.CreatePhoto)
+			photos.PUT("/:photoId", middlewares.PhotoAuthorization(), controllers.UpdatePhoto)
+			photos.DELETE("/:photoId", middlewares.PhotoAuthorization(), controllers.DeletePhoto)
 		}
 	}
 

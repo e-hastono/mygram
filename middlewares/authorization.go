@@ -54,3 +54,48 @@ func SocialMediaAuthorization() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func PhotoAuthorization() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		db := database.GetDB()
+		photoId, err := strconv.Atoi(c.Param("photoId"))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+				"status": "failure",
+				"error":  err.Error(),
+			})
+			return
+		}
+
+		userID, err := helpers.ExtractTokenID(c)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+				"status": "failure",
+				"error":  err.Error(),
+			})
+			return
+		}
+
+		Photo := models.Photo{}
+
+		err = db.Debug().Select("user_id").First(&Photo, uint(photoId)).Error
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"status": "failure",
+				"error":  err.Error(),
+			})
+			return
+		}
+
+		if Photo.UserID != userID {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"status": "failure",
+				"error":  "unauthorized to access this data",
+			})
+			return
+		}
+
+		c.Next()
+	}
+}
