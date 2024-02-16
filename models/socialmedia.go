@@ -12,7 +12,7 @@ type SocialMedia entities.SocialMedia
 func (sm *SocialMedia) SaveSocialMedia() (*SocialMedia, error) {
 	db := database.GetDB()
 
-	err := db.Create(&sm).Error
+	err := db.Debug().Create(&sm).Error
 	if err != nil {
 		return &SocialMedia{}, err
 	}
@@ -34,7 +34,7 @@ func (sm *SocialMedia) UpdateSocialMedia() (*SocialMedia, error) {
 func (sm *SocialMedia) DeleteSocialMedia() error {
 	db := database.GetDB()
 
-	err := db.Delete(sm).Error
+	err := db.Debug().Delete(sm).Error
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func GetSocialMediasByUserID(uid uint) ([]SocialMedia, error) {
 
 	var socialmedias []SocialMedia
 
-	if err := db.Where("user_id = ?", uid).Find(&socialmedias).Error; err != nil {
+	if err := db.Debug().Where("user_id = ?", uid).Find(&socialmedias).Error; err != nil {
 		return socialmedias, errors.New("social medias of user not found")
 	}
 
@@ -59,7 +59,7 @@ func GetSocialMediaBySocialMediaIDUserID(smid uint, uid uint) (SocialMedia, erro
 
 	db := database.GetDB()
 
-	if err := db.Where("user_id = ?", uid).First(&socialmedia, smid).Error; err != nil {
+	if err := db.Debug().Where("user_id = ?", uid).First(&socialmedia, smid).Error; err != nil {
 		return socialmedia, errors.New("social media of user not found")
 	}
 

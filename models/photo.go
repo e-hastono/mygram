@@ -14,8 +14,8 @@ func GetPhotosByUserID(uid uint) ([]Photo, error) {
 
 	var photos []Photo
 
-	if err := db.Where("user_id = ?", uid).Find(&photos).Error; err != nil {
-		return photos, errors.New("Photos of user not found")
+	if err := db.Debug().Where("user_id = ?", uid).Find(&photos).Error; err != nil {
+		return photos, errors.New("photos of user not found")
 	}
 
 	return photos, nil
@@ -26,8 +26,8 @@ func GetPhotoByPhotoIDUserID(pid uint, uid uint) (Photo, error) {
 
 	db := database.GetDB()
 
-	if err := db.Where("user_id = ?", uid).First(&photo, pid).Error; err != nil {
-		return photo, errors.New("Photo of user not found")
+	if err := db.Debug().Where("user_id = ?", uid).First(&photo, pid).Error; err != nil {
+		return photo, errors.New("photo of user not found")
 	}
 
 	return photo, nil

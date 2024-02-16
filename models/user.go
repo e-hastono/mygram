@@ -16,7 +16,7 @@ type User entities.User
 func (u *User) SaveUser() (*User, error) {
 	db := database.GetDB()
 
-	err := db.Create(&u).Error
+	err := db.Debug().Create(&u).Error
 	if err != nil {
 		return &User{}, err
 	}
@@ -47,7 +47,7 @@ func LoginCheck(username string, password string) (uint, error) {
 
 	db := database.GetDB()
 
-	err = db.Model(User{}).Where("username = ?", username).Take(&u).Error
+	err = db.Debug().Model(User{}).Where("username = ?", username).Take(&u).Error
 
 	if err != nil {
 		return 0, err
