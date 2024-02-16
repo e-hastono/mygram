@@ -85,7 +85,7 @@ cp .env.example .env
 6. Jalankan repository
 
 ```bash
-go run main.go
+go run .
 ```
 
 API dapat diakses di http://localhost:8080
